@@ -1,13 +1,13 @@
 %Rango de valores
-x = 0:0.01:15*pi
+x = 0:0.01:15*pi;
 
 %Función 1
 
-f1 = 8*(log(4*x + 12)/log(5))
+f1 = 8*(log(4*x + 12)/log(5));
 
 %Función 2
 
-f2 = sin(6)*((log(x+9)/log(2))) + cos(7*(log(4*x+32)/log(6)))
+f2 = sin((6)*((log(x+9)/log(2)))) + cos(7*(log(4*x+32)/log(6)));
 
 
 %Gráfico función 1
@@ -38,8 +38,8 @@ hold off
 
 %Función 3
 
-x2 = -10:0.05:10
-f3 = 6*exp(x2+18)
+x2 = -10:0.05:10;
+f3 = 6*exp(x2+18);
 
 %Gráfico normal f3 
 plot(x2,f3, 'b .')
@@ -50,6 +50,6 @@ ylabel('c(x)')
 
 %Gráfico función 3 escala logarítmica 
 semilogy(x2,f3, 'b .')
-title ( 'Gráfico función 3 en escala logarítmica' );
+title ( 'Gráfico función 3 en escala logarítmica' )
 xlabel('x')
 ylabel('c(x)')
