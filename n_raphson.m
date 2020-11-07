@@ -6,9 +6,8 @@ e = abs((p - polyval(pol,p0))/polyval(polyder(pol),p));
 if n > 0 && err < e
     p0 = n_raphson(pol,p,n-1,err);
 else
-    resultado = p0;
+    resultado = p0;  
 end
 resultado = p0;
 end
 
-   

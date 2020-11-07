@@ -12,13 +12,13 @@ f2 = sin((6)*((log(x+9)/log(2)))) + cos(7*(log(4*x+32)/log(6)));
 
 %Gráfico función 1
 plot(x,f1, 'r *')
-title('Gráfico función 1')
+title('Gráfico función a(x)')
 xlabel('x')
 ylabel('a(x)')
 
 %Gráfico función 2
 plot(x,f2, 'g +')
-title('Gráfico función 2')
+title('Gráfico función b(x)')
 xlabel('x')
 ylabel('b(x)')
 
@@ -29,7 +29,7 @@ hold on
 
 plot(x,f1, 'r *')
 plot(x,f2, 'g +')
-title('Gráfico 1 y 2')
+title('Gráfico a(x) y b(x)')
 xlabel('x')
 ylabel('y(x)')
 legend('a(x)','b(x)')
@@ -43,13 +43,13 @@ f3 = 6*exp(x2+18);
 
 %Gráfico normal f3 
 plot(x2,f3, 'b .')
-title('Gráfico función 3')
+title('Gráfico función c(x)')
 xlabel('x')
 ylabel('c(x)')
 
 
 %Gráfico función 3 escala logarítmica 
 semilogy(x2,f3, 'b .')
-title ( 'Gráfico función 3 en escala logarítmica' )
+title ( 'Gráfico función c(x) en escala logarítmica' )
 xlabel('x')
 ylabel('c(x)')
