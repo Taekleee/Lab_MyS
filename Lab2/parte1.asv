@@ -36,12 +36,8 @@ step(H2, lazo2)
 %de lazo abierto y lazo cerrado.
 [Z3, gain3] = zero(H2);
 [Z4, gain4] = zero(lazo2);
-
-%Se obtienen los polos para la función de lazo abierto y lazo cerrado
 pole3 = pole(H2);
 pole4 = pole(lazo2);
-%Se obtiene la información referente al tiempo de estabilización
-%de la función de lazo abierto y cerrado.
 stepinfo(H2)
 stepinfo(lazo2)
 
