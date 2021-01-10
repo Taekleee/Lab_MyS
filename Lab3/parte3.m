@@ -1,0 +1,6 @@
+discretizar(2, 'zoh')
+discretizar(2, 'foh')
+discretizar(0.1, 'zoh')
+discretizar(0.1, 'foh')
+discretizar(0.001, 'zoh')
+discretizar(0.001, 'foh')
