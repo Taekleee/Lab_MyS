@@ -14,7 +14,7 @@ void setup() {
 
 void draw() {
   background(50);
-  circle(300, 300, 150);
+  circle(300, 300, 140);
   square(300,300,0);
   flock.run();
 }
@@ -202,15 +202,24 @@ class Boid {
   }
 
   PVector separate2 (ArrayList<Boid> boids) {
-    float desiredseparation = 110.0f;
+    float desiredseparation = 115.0f;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     PVector a = new PVector(300,300);
+    PVector b = new PVector(170,170);
     // For every boid in the system, check if it's too close
     
     for (Boid other : boids) {
       float d = PVector.dist(position, a);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+      if ((d > 0) && (d < desiredseparation + 60)) {
+        // Calculate vector pointing away from neighbor
+        PVector diff = PVector.sub(position, b);
+        diff.normalize();
+        diff.div(d);        // Weight by distance
+        steer.add(diff);
+        count++;            // Keep track of how many
+      }
       if ((d > 0) && (d < desiredseparation)) {
         // Calculate vector pointing away from neighbor
         PVector diff = PVector.sub(position, a);
