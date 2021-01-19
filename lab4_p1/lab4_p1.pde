@@ -12,10 +12,12 @@ void setup() {
   }
 }
 
+/* Se dibuja un círculo de radio 140, centrado en el punto (300,300)
+lo cual equivale al centro de la pantalla desplegada
+*/
 void draw() {
   background(50);
   circle(300, 300, 140);
-  square(300,300,0);
   flock.run();
 }
 
@@ -90,6 +92,33 @@ class Boid {
   }
 
   // We accumulate a new acceleration each time based on three rules
+  /*
+  ##############################################################################################################################################
+  ##############################################################################################################################################
+  ##############################################################################################################################################
+  
+  Debido a que existe una nueva fuerza de separación, y que es realizada por 
+  el pilar hacia los pájaros, es que es necesario agregarla a la sumatoria de fuerza
+  quedando: 
+  
+  F = sep + ali + coh + sep2
+  
+  en donde: 
+  
+  sep: Fuerza de separación entre los pájaros
+  ali: Fuerza de alineación entre los pájaros
+  coh: Fuerza de cohesión entre los pájaros
+  sep2: Fuerza de separación o "repulsión" entre cada uno de los pájaros y el pilar
+  
+  También es necesario multiplicar a cada una de las fuerzas con el peso. En el caso de 
+  sep2, debido a que los pájaros no deben chocar con el pilar, se le asigna un valor mayor
+  al resto.
+  Finalmente se aplica la fuerza y se actualiza a cada uno de los pájaros. 
+  
+  ##############################################################################################################################################
+  ##############################################################################################################################################
+  ##############################################################################################################################################
+  */
   void flock(ArrayList<Boid> boids) {
     PVector sep = separate(boids);   // Separation
     PVector sep2= separate2(boids);
@@ -200,13 +229,35 @@ class Boid {
     }
     return steer;
   }
+/*
+##############################################################################################################################################
+##############################################################################################################################################
+##############################################################################################################################################
 
+Se crea un método llamado separate2.
+Lo que se hace es generar dos radios, uno para el pilar (desiredseparation) y otro más grande,
+además de dos vectores que simbolizan la magnitud de la fuerza de estos radios (a y b respectivamente). 
+El algoritmo se desarrolla para cada pájaro: 
+- Primero compara si el pájaro se encuentra dentro del radio mayor definido, de ser así calcula la fuerza 
+de repulsión que debe ser aplicada. De esta manera, el pájaro desde antes de chocar con el pilar se comienza a desviar.
+- Si debido a la velocidad el pájaro entra en el radio del pilar, se aplica una fuerza con una magnitud mayor a la anterior,
+con el fin de desviarlo totalmente. 
+
+
+De esta forma se simula el vuelo de los pájaros, ya que desde que ven el objeto a la distancia comienzan de a poco a cambiar
+su rumbo. 
+En el caso de que se comenzara a desviar justo cuando choca con el pilar, el pájaro daría media vuelta y se iría por el camino que venía.
+
+##############################################################################################################################################
+##############################################################################################################################################
+##############################################################################################################################################
+*/
   PVector separate2 (ArrayList<Boid> boids) {
-    float desiredseparation = 115.0f;
+    float desiredseparation = 125.0f;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     PVector a = new PVector(300,300);
-    PVector b = new PVector(170,170);
+    PVector b = new PVector(175,175);
     // For every boid in the system, check if it's too close
     
     for (Boid other : boids) {
