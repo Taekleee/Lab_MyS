@@ -16,7 +16,7 @@ PVector target2 = new PVector(600, 261);
 
 
 void setup() {
-  size(1700, 1500);
+  size(700, 500);
   people = new People();
   //**********************************************************************
   // Se generan las personas
@@ -47,7 +47,7 @@ void draw() {
   line(0, 0, 600, 226);
   line(600,274, 0, 500);
   line(40,100,40,400);
-//  delay(200);
+ // delay(200);
   people.run();
   
 
