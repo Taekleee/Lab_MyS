@@ -1,6 +1,6 @@
 Person person; 
 People people;
-
+long lastTime = 0;
 //CONSTANTES
 
 float A  = 25;
@@ -13,16 +13,24 @@ float t = 0.5;
 
 PVector target = new PVector(600, 239);
 PVector target2 = new PVector(600, 261);
-
+void myDelay(int ms)
+{
+   try
+  {    
+    Thread.sleep(ms);
+  }
+  catch(Exception e){}
+}
 
 void setup() {
   size(700, 500);
+  lastTime = millis();
   people = new People();
   //**********************************************************************
   // Se generan las personas
   
   people.addPerson(new Person(40,30));
-  people.addPerson(new Person(40,130));
+  /*people.addPerson(new Person(40,130));
   people.addPerson(new Person(40,160));
   people.addPerson(new Person(40,190));
   people.addPerson(new Person(40,210));
@@ -32,12 +40,10 @@ void setup() {
   people.addPerson(new Person(40,330));
   people.addPerson(new Person(40,360));
   people.addPerson(new Person(40,390));
-  
-  /*
-   for (int i = 0; i < 10; i++) {
-    people.addPerson(new Person(40,random(100,400)));  
-  }
   */
+  
+
+  
 }
 
 /* Se dibujan las líneas
