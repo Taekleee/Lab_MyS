@@ -2,16 +2,19 @@
 //Almacena una lista de personas
 class People {
   ArrayList<Person> person; // An ArrayList for all the boids
-  int i = 10;
+  int i = 30;
   int j = 0;
   People() {
     person = new ArrayList<Person>(); // Initialize the ArrayList
   }
 
+  /*
+  Entrada: - 
+  Proceso: 
+  */
   void run() {
     for (Person b : person) {
-
-      b.run(person);  // Passing the entire list of boids to each boid individually
+      b.run(person);  
     }
     if(j<i){
        int rand = int(random(1,100));

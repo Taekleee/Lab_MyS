@@ -13,18 +13,24 @@ class Person {
     velocity = new PVector(5,4);
     location = new PVector(x,y);
     r = 10;
-    maxspeed = 5;
-    maxforce = 0.08;
+    maxspeed = 2;
+    maxforce = 0.7;
   }
 
+/* Entrada: lista con las personas
+   Proceso: se establece el target más cercano, luego se calculan las fuerzas, se actualizan, se limitan los bordes y
+   finalmente se despliega.
+*/
   void run(ArrayList<Person> person) {
-    arrive(target, target2);
+    arrive(target, target2, target3);
     people(person);
     update();
     borders();
     display();
   }
-  
+  /* Entrada: -
+   Proceso: se actualiza la velocidad y locación y se limita la velocidad.
+*/
   void update() {
     velocity.add(acceleration);
     velocity.limit(maxspeed);
@@ -39,6 +45,10 @@ class Person {
   //**********************************************************************
   // Se suman las fuerzas
   
+  /* Entrada: lista con las personas
+   Proceso: Se calculan todas las fuerzas que afectan a las personas y luego se multiplican para asignar una 
+   magnitud a cada fuerza.
+*/
   void people(ArrayList<Person> person) {
       PVector sep = separate(person);   // Separation
       PVector cor = corporal(person);
@@ -57,12 +67,12 @@ class Person {
       cor.mult(1.2);
       fric.mult(1.2);
       
-      sepSup.mult(1.4);
-      corSup.mult(1.4);
-      fricSup.mult(1.4);      
-      sepInf.mult(1.4);
-      corInf.mult(1.4);
-      fricInf.mult(1.4);
+      sepSup.mult(1.1);
+      corSup.mult(1.1);
+      fricSup.mult(1.1);      
+      sepInf.mult(1.1);
+      corInf.mult(1.1);
+      fricInf.mult(1.1);
       
       // Add the force vectors to acceleration
       applyForce(sep);
@@ -79,6 +89,10 @@ class Person {
     //**********************************************************************
     //                         FUERZAS ENTRE PERSONAS
     //**********************************************************************
+    /* Entrada: lista con las personas
+     Proceso: Se compara a cada persona con todas las demás y si la distancia entre ellas es menor a R se calcula la
+     fuerza de repulsión.
+*/
     PVector separate (ArrayList<Person> person) {
     float desiredseparation = 60.0f;
     PVector steer = new PVector(0, 0, 0);
@@ -103,6 +117,10 @@ class Person {
 
    //**********************************************************************
     // Fuerzaz corporal
+    /* Entrada: lista con las personas
+     Proceso: Se calcula la fuerza que se produce cuando dos personas chocan, para ellos se calcula la
+     distancia entre cada persona y el resto, y de ser mayor al radio de acción se calcula la fuerza.
+*/
     PVector corporal (ArrayList<Person> person) {
     float rij = 20.0f;
     PVector steer = new PVector(0, 0, 0);
@@ -116,6 +134,10 @@ class Person {
         nij.normalize();
         steer.add(nij);
         count++;    }
+        else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);
+      }
     }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -123,6 +145,10 @@ class Person {
 
    //**********************************************************************
     // Fuerza de fricción
+    /* Entrada: lista con las personas
+   Proceso: Cuando la distancia entre dos personas es mejor a rij significa que chocan, por lo
+   tanto se calcula la fuerza de fricción, de lo contrario el valor de esta fuerza es 0.
+*/
     PVector friccion (ArrayList<Person> person) {
     float rij = 20.0f;
     PVector steer = new PVector(0, 0, 0);
@@ -140,6 +166,10 @@ class Person {
         vij.normalize();
         steer.add(vij);
         count++;  }
+          else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);
+      }
     }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -148,6 +178,11 @@ class Person {
  //**********************************************************************
  //                         FUERZAS PAREDES 
  //**********************************************************************    
+ /* Para el caso de las paredes ocurre lo mismo que entre las personas, es decir,
+ se aplican la fuerza de separación entre la persona y la pared y en caso de chocar con
+ ella se calculan las fuerzas de fricción y corporal
+ */
+ 
 PVector separateWall (ArrayList<Person> person, String wall) {
     float desiredseparation = 60.0f;
     PVector steer = new PVector(0, 0, 0);
@@ -167,7 +202,6 @@ PVector separateWall (ArrayList<Person> person, String wall) {
         }
       }
       if((dij > 0) && (dij < desiredseparation)) {
-        line(point.x, point.y, location.x, location.y);
         float rij = 20;
         PVector nij = PVector.sub(location, point);
         nij.div(dij);
@@ -209,6 +243,10 @@ PVector separateWall (ArrayList<Person> person, String wall) {
         nij.normalize();
         steer.add(nij);
         count++; }
+          else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);
+      }
     }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -244,6 +282,10 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
         vij.normalize();
         steer.add(vij);
         count++;      }
+        else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);
+      }
     }
     if (count > 0)  steer.div((float)count);
       return steer;
@@ -253,24 +295,28 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
   
  //**********************************************************************
  //Si se llega al objetivo la persona vuelve a entrar por el extremo izquierdo
- // Arreglar 
+ 
   void borders(){
-   // if(location.x >= 600 && location.y <= 261 && location.y >= 239) location.x = 0;
-    if(location.x >= 600 + r) location.x = 0;
+    if(location.x >= 600 ) location.x = 0;
   }
   
   //**********************************************************************
-  //Genera que cada persona llegue al punto objetivo
-  void arrive(PVector target, PVector target2) {
+  /* Entrada: Puntos objetivos
+   Proceso: Se calcula la distancia entre cada persona y los tres objetivos existentes (dependiendo si se encuentra de
+   frente a la salida, en la parte superior o inferior), luego se establece como objetivo aquella que se encuentre más 
+   cercana y finalmente se calcula la fuerza ejercida.
+*/
+  void arrive(PVector target, PVector target2, PVector target3) {
     PVector desired =   new PVector(0,0,0);
     float desired2 = PVector.dist(target, location); 
     float desired3 = PVector.dist(target2, location);
-    
-    if(desired2 < desired3) desired = PVector.sub(target, location); 
-    else desired = PVector.sub(target2, location); 
+    float desired4 = PVector.dist(target3,location);
+    if(desired2 < desired3 & desired3 < desired4) desired = PVector.sub(target, location); 
+    else if(desired3 < desired2 & desired3 < desired4) desired = PVector.sub(target2, location); 
+    else{desired = PVector.sub(target3, location); }
     float d = desired.mag();
     desired.normalize();
-    if (d < 100) {
+    if (d < 1) {
       float m = map(d, 0, 200, 0, maxspeed);
       desired.mult(m);
     } else desired.mult(maxspeed);
