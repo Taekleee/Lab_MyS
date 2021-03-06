@@ -2,8 +2,8 @@
 //Almacena una lista de personas
 class People {
   ArrayList<Person> person; // An ArrayList for all the boids
-  int i = 30;
-  int j = 0;
+  int total_persons = 10; //Cantidad de personas a generar
+  int iterator = 0; 
   People() {
     person = new ArrayList<Person>(); // Initialize the ArrayList
   }
@@ -16,11 +16,18 @@ class People {
     for (Person b : person) {
       b.run(person);  
     }
-    if(j<i){
+    
+    
+    if(iterator<total_persons){
        int rand = int(random(1,100));
+       /*Para simular que las personas aparecen en tiempos distintos sin detener el programa completo,
+         se van generando nuevas personas según el frame en el que se encuentra. Si el frame del programa
+         es múltiplo del valor almacenado en la variable rand, se agrega la nueva persona, si no, se espera
+         a que el programa pase al frame siguiente para realizar este proceso.
+        */
        if(frameCount %  rand == 0){
           person.add(new Person(40,random(30,400)));
-          j++;
+          iterator++;
        }
     }
     
@@ -30,13 +37,5 @@ class People {
     person.add(b);
   }
   
-  void myDelay(int ms)
-{
-   try
-  {    
-    Thread.sleep(ms);
-  }
-  catch(Exception e){}
-}
 
 }
