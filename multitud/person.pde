@@ -63,16 +63,16 @@ class Person {
       PVector fricInf = friccionWall(person, "inf");
       
       // Arbitrarily weight these forces
-      sep.mult(1.2);
-      cor.mult(1.2);
-      fric.mult(1.2);
+      sep.mult(1.6);
+      cor.mult(1.8);
+      fric.mult(1.8);
       
-      sepSup.mult(1.1);
-      corSup.mult(1.1);
-      fricSup.mult(1.1);      
-      sepInf.mult(1.1);
-      corInf.mult(1.1);
-      fricInf.mult(1.1);
+      sepSup.mult(1.5);
+      corSup.mult(1.5);
+      fricSup.mult(1.5);      
+      sepInf.mult(1.5);
+      corInf.mult(1.5);
+      fricInf.mult(1.5);
       
       // Add the force vectors to acceleration
       applyForce(sep);
@@ -192,7 +192,7 @@ PVector separateWall (ArrayList<Person> person, String wall) {
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(i*226/600); 
+        if(wall == "sup") j =(-i*226/600); 
         else j = (-i*226/600) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
@@ -226,7 +226,7 @@ PVector separateWall (ArrayList<Person> person, String wall) {
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(i*226/600); 
+        if(wall == "sup") j =(-i*226/600); 
         else j = (-i*226/600) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
@@ -261,7 +261,7 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(i*226/600); 
+        if(wall == "sup") j =(-i*226/600); 
         else j = (-i*226/600) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
@@ -311,9 +311,17 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
     float desired2 = PVector.dist(target, location); 
     float desired3 = PVector.dist(target2, location);
     float desired4 = PVector.dist(target3,location);
-    if(desired2 < desired3 & desired3 < desired4) desired = PVector.sub(target, location); 
-    else if(desired3 < desired2 & desired3 < desired4) desired = PVector.sub(target2, location); 
-    else{desired = PVector.sub(target3, location); }
+    if(desired2 < desired3 & desired2 < desired4) {
+      desired = PVector.sub(target, location); 
+      //line(location.x,location.y, target.x, target.y);
+    }
+    else if(desired3 < desired2 & desired3 < desired4){
+      desired = PVector.sub(target2, location); 
+      //line(location.x,location.y, target2.x, target2.y);
+    }
+    else{desired = PVector.sub(target3, location);
+       // line(location.x,location.y, target3.x, target3.y);
+      }
     float d = desired.mag();
     desired.normalize();
     if (d < 1) {
@@ -332,9 +340,7 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
     stroke(0);
     pushMatrix();
     translate(location.x,location.y);
-    rotate(theta);
-    beginShape();
-    ellipse(r,r, r*2, r*2);
+    ellipse(r,r, r*2,r*2);
     endShape(CLOSE);
     popMatrix();
   }
