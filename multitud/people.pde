@@ -2,7 +2,7 @@
 //Almacena una lista de personas
 class People {
   ArrayList<Person> person; // An ArrayList for all the boids
-  int total_persons = 10; //Cantidad de personas a generar
+  int total_persons = 50; //Cantidad de personas a generar
   int iterator = 0; 
   People() {
     person = new ArrayList<Person>(); // Initialize the ArrayList
@@ -26,7 +26,7 @@ class People {
          a que el programa pase al frame siguiente para realizar este proceso.
         */
        if(frameCount %  rand == 0){
-          person.add(new Person(40,random(30,400)));
+          person.add(new Person(40,random(100,400)));
           iterator++;
        }
     }

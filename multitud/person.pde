@@ -13,8 +13,8 @@ class Person {
     velocity = new PVector(5,4);
     location = new PVector(x,y);
     r = 10;
-    maxspeed = 2;
-    maxforce = 0.7;
+    maxspeed = 2.0;
+    maxforce = 2.5;
   }
 
 /* Entrada: lista con las personas
@@ -62,10 +62,12 @@ class Person {
       PVector corInf = corporalWall(person, "inf");
       PVector fricInf = friccionWall(person, "inf");
       
-      // Arbitrarily weight these forces
-      sep.mult(1.6);
-      cor.mult(1.8);
-      fric.mult(1.8);
+     /*
+        Fuerzas entre personas      
+      */
+      sep.mult(2.0);
+      cor.mult(2.0);
+      fric.mult(2.0);
       
       sepSup.mult(1.5);
       corSup.mult(1.5);
@@ -324,10 +326,7 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
       }
     float d = desired.mag();
     desired.normalize();
-    if (d < 1) {
-      float m = map(d, 0, 200, 0, maxspeed);
-      desired.mult(m);
-    } else desired.mult(maxspeed);
+    desired.mult(maxspeed);
     
     PVector steer = PVector.sub(desired,velocity);
     steer.limit(maxforce);
@@ -340,7 +339,7 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
     stroke(0);
     pushMatrix();
     translate(location.x,location.y);
-    ellipse(r,r, r*2,r*2);
+    circle(r,r, 2*r);
     endShape(CLOSE);
     popMatrix();
   }
