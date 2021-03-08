@@ -1,6 +1,5 @@
 Person person; 
 People people;
-long lastTime = 0;
 //Se definen las constantes 
 
 float A  = 25;
@@ -18,13 +17,11 @@ PVector target3 = new PVector(600, 250);
 
 void setup() {
   size(700, 500);
-  lastTime = millis();
   people = new People();  
 }
 
 // Se dibujan las líneas
 void draw() {
-  
   background(50);
   line(0, 0, 600, 226);
   line(600,274, 0, 500);

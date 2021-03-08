@@ -1,20 +1,22 @@
 class Person {
-  PVector location;
-  PVector velocity;
-  PVector acceleration;
-  float r; //Radio del círculo
-  float maxforce;
-  float maxspeed;
-  float lifespan;
+  PVector location; //Posición en la que se encuentra la persona
+  PVector velocity; //Velocidad de movimiento de la persona
+  PVector acceleration; //Aceleración de la persona
+  float r; //Radio del círculo que representa a la persona
+  float maxforce; //Máxima fuerza que se puede ejercer
+  float maxspeed; //Máxima velocidad que se puede estar
 
-  
+  /*
+  Entrada: Posición X y posición Y de la persona en la simulación
+  Se instancia a la persona en la posición indicada.
+  */
   Person(float x, float y) {
     acceleration = new PVector(0,0);
     velocity = new PVector(5,4);
     location = new PVector(x,y);
     r = 10;
-    maxspeed = 2.0;
-    maxforce = 2.5;
+    maxspeed = 1.3;
+    maxforce = 3.0;
   }
 
 /* Entrada: lista con las personas
@@ -50,37 +52,38 @@ class Person {
    magnitud a cada fuerza.
 */
   void people(ArrayList<Person> person) {
-      PVector sep = separate(person);   // Separation
-      PVector cor = corporal(person);
-      PVector fric = friccion(person);
+      PVector sep = separate(person);// Fuerza de separación
+      PVector cor = corporal(person);// Fuerza corporal 
+      PVector fric = friccion(person);// Fuerza de fricción
       
-      PVector sepSup = separateWall(person, "sup");
-      PVector corSup = corporalWall(person, "sup");
-      PVector fricSup = friccionWall(person, "sup");
+      PVector sepSup = separateWall(person, "sup");//Fuerza de separación pared superior
+      PVector corSup = corporalWall(person, "sup");// Fuerza corporal pared superior
+      PVector fricSup = friccionWall(person, "sup");// Fuerza de fricción pared superior
       
-      PVector sepInf = separateWall(person, "inf");
-      PVector corInf = corporalWall(person, "inf");
-      PVector fricInf = friccionWall(person, "inf");
+      PVector sepInf = separateWall(person, "inf");//Fuerza de separación pared inferior
+      PVector corInf = corporalWall(person, "inf");//Fuerza corporal pared inferior
+      PVector fricInf = friccionWall(person, "inf");//Fuerza de fricción pared inferior
       
-     /*
-        Fuerzas entre personas      
-      */
-      sep.mult(2.0);
-      cor.mult(2.0);
+     
+      //Fuerzas entre personas       
+      sep.mult(10.0);
+      cor.mult(5.0);
       fric.mult(2.0);
       
-      sepSup.mult(1.5);
-      corSup.mult(1.5);
-      fricSup.mult(1.5);      
-      sepInf.mult(1.5);
-      corInf.mult(1.5);
-      fricInf.mult(1.5);
+      //Fuerzas pared superior
+      sepSup.mult(5.0);
+      corSup.mult(0.5);
+      fricSup.mult(0.5);      
       
-      // Add the force vectors to acceleration
+      //Fuerzas pared inferior
+      sepInf.mult(5.0);
+      corInf.mult(0.5);
+      fricInf.mult(0.5);
+      
+      
       applyForce(sep);
       applyForce(cor);
       applyForce(fric);
-      
       applyForce(sepSup);
       applyForce(corSup);
       applyForce(fricSup);      
@@ -99,7 +102,7 @@ class Person {
     float desiredseparation = 60.0f;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
-    float rij = 20;
+    float rij = 20.0f;
     for (Person other : person) {
       float dij = PVector.dist(location, other.location);
       if ((dij > 0) && (dij < desiredseparation)) {     
@@ -107,11 +110,15 @@ class Person {
         nij.div(dij);
         float exponente = (-(dij- rij))/B;
         if(exponente > 0) exponente = -exponente;        
-        float mult = exp(exponente)*A;
-        nij.mult(mult);
-        nij.normalize();
-        steer.add(nij);
-        count++;    }
+          float mult = exp(exponente)*A;
+          nij.mult(mult);
+          nij.normalize();
+          steer.add(nij);
+          count++;    }
+        else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);
+        }
     }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -130,12 +137,12 @@ class Person {
     for (Person other : person) {
       float dij = PVector.dist(location, other.location);
       if ((dij > 0) && (dij < rij)) {
-        PVector nij = PVector.sub(location, other.location);
-        nij.div(dij);
-        nij.mult(2*kMin*(rij - dij));
-        nij.normalize();
-        steer.add(nij);
-        count++;    }
+          PVector nij = PVector.sub(location, other.location);
+          nij.div(dij);
+          nij.mult(2*kMin*(rij - dij));
+          nij.normalize();
+          steer.add(nij);
+          count++;    }
         else{ 
           PVector cero = new PVector(0,0,0);
           steer.add(cero);
@@ -158,20 +165,20 @@ class Person {
     for (Person other : person) {
       float dij = PVector.dist(location, other.location);
       if ((dij > 0) && (dij < rij)) {
-        PVector nij = PVector.sub(location, other.location);
-        nij.div(dij);
-        PVector vij = PVector.sub(velocity, other.velocity);
-        PVector tij =new PVector(-nij.x, nij.y);
-        vij.dot(tij);
-        vij.mult(kMay*(rij - dij));
-        vij.cross(tij);
-        vij.normalize();
-        steer.add(vij);
-        count++;  }
+          PVector nij = PVector.sub(location, other.location);
+          nij.div(dij);
+          PVector vij = PVector.sub(velocity, other.velocity);
+          PVector tij =new PVector(-nij.x, nij.y);
+          vij.dot(tij);
+          vij.mult(kMay*(rij - dij));
+          vij.cross(tij);
+          vij.normalize();
+          steer.add(vij);
+          count++;  }
           else{ 
-          PVector cero = new PVector(0,0,0);
-          steer.add(cero);
-      }
+            PVector cero = new PVector(0,0,0);
+            steer.add(cero);
+          }
     }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -194,8 +201,8 @@ PVector separateWall (ArrayList<Person> person, String wall) {
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(-i*226/600); 
-        else j = (-i*226/600) + 500; 
+        if(wall == "sup"){ j =(i*113/300) - 20;} 
+        else j = (-i*113/300) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
         if(dif  < dij){
@@ -204,7 +211,7 @@ PVector separateWall (ArrayList<Person> person, String wall) {
         }
       }
       if((dij > 0) && (dij < desiredseparation)) {
-        float rij = 20;
+        float rij = 20.0f;
         PVector nij = PVector.sub(location, point);
         nij.div(dij);
         float exponente = (-(dij- rij))/B;
@@ -213,7 +220,10 @@ PVector separateWall (ArrayList<Person> person, String wall) {
         nij.mult(mult);
         nij.normalize();
         steer.add(nij);
-        count++;}   
+        count++;} 
+      else{ 
+          PVector cero = new PVector(0,0,0);
+          steer.add(cero);}
       }
       if (count > 0) steer.div((float)count);
       return steer;
@@ -222,14 +232,14 @@ PVector separateWall (ArrayList<Person> person, String wall) {
   PVector corporalWall (ArrayList<Person> person, String wall) {
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
-    float rij = 20;
+    float rij = 20.0f;
     for (Person other : person) {
       PVector point = new PVector(0,0,0);
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(-i*226/600); 
-        else j = (-i*226/600) + 500; 
+        if(wall == "sup") j =(i*113/300) - 20; 
+        else j = (-i*113/300) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
         if(dif  < dij){
@@ -245,7 +255,7 @@ PVector separateWall (ArrayList<Person> person, String wall) {
         nij.normalize();
         steer.add(nij);
         count++; }
-          else{ 
+       else{ 
           PVector cero = new PVector(0,0,0);
           steer.add(cero);
       }
@@ -263,8 +273,8 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
       float dij = 100;
       float j;
       for(int i = 0; i < 600; i++){
-        if(wall == "sup") j =(-i*226/600); 
-        else j = (-i*226/600) + 500; 
+        if(wall == "sup") j =(i*113/300)- 20; 
+        else j = (-i*113/300) + 500; 
         PVector other2 = new PVector(i,j);
         float dif = PVector.dist(location, other2);
         if(dif  < dij){
@@ -315,15 +325,12 @@ PVector friccionWall (ArrayList<Person> person, String wall) {
     float desired4 = PVector.dist(target3,location);
     if(desired2 < desired3 & desired2 < desired4) {
       desired = PVector.sub(target, location); 
-      //line(location.x,location.y, target.x, target.y);
     }
     else if(desired3 < desired2 & desired3 < desired4){
       desired = PVector.sub(target2, location); 
-      //line(location.x,location.y, target2.x, target2.y);
     }
     else{desired = PVector.sub(target3, location);
-       // line(location.x,location.y, target3.x, target3.y);
-      }
+    }
     float d = desired.mag();
     desired.normalize();
     desired.mult(maxspeed);
